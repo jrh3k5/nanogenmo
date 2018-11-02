@@ -1,0 +1,79 @@
+[
+  {
+    "name": "basic case",
+    "lines": [
+      "This is a simple test of a simple situation"
+    ],
+    "expectedStats": [
+      {
+        "word": "THIS",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "IS",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "IS",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "A",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "A",
+        "count": 2,
+        "childWords": [
+          {
+            "word": "SIMPLE",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "word": "SIMPLE",
+        "count": 2,
+        "childWords": [
+          {
+            "word": "TEST",
+            "count": 1
+          },
+          {
+            "word": "SITUATION",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "TEST",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "OF",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "OF",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "A",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "SITUATION",
+        "count": 1,
+        "childWords": []
+      }
+    ]
+  }
+]

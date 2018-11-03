@@ -6,29 +6,24 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleWordStatisticsParserTest {
+class SimpleWordStatisticsParserTest {
     private final SimpleWordStatisticsParser parser = new SimpleWordStatisticsParser();
 
     @ParameterizedTest(name = "Testing for {0}")
     @MethodSource("createTestParams")
-    public void parseStatistics(TestParams testParams) {
+    void parseStatistics(TestParams testParams) {
         assertThat(parser.parse(testParams.getLines())).hasSameSizeAs(testParams.getExpected())
                                                        .containsAll(testParams.getExpected());
     }
@@ -49,6 +44,17 @@ public class SimpleWordStatisticsParserTest {
                                                                                        final WordStatistics.ChildWord childWord = nStats.getChildWord(ncw.get("word").asText());
                                                                                        childWord.increment(ncw.get("count").asInt());
                                                                                    });
+
+                                                                                   // If the post characters aren't present, then just infer that the test should look for spaces equal to the number of instances of this word
+                                                                                   if(!n.has("postCharacters")) {
+                                                                                       nStats.getPostCharacter(' ').increment(count);
+                                                                                   } else {
+                                                                                       StreamSupport.stream(n.get("postCharacters").spliterator(), false).forEach(pc -> {
+                                                                                           final WordStatistics.PostCharacter postCharacter = nStats.getPostCharacter(pc.get("character").asText().charAt(0));
+                                                                                           postCharacter.increment(pc.get("count").asInt());
+                                                                                       });
+                                                                                   }
+
 
                                                                                    return nStats;
                                                                                }).collect(Collectors.toList());

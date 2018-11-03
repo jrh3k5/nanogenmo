@@ -16,8 +16,19 @@ public class SimpleWordStatisticsParser implements WordStatisticsParser {
                                                                            .collect(Collectors.toList());
             WordStatistics previousWord = null;
             for(String word : words) {
-                final WordStatistics wordStats = wordsStats.computeIfAbsent(word, WordStatistics::new);
+                final String effectiveWord;
+                final char postCharacter;
+                if(word.matches(".+[.,?!]$")) {
+                    effectiveWord = word.substring(0, word.length() - 1);
+                    postCharacter = word.substring(word.length() - 1).charAt(0);
+                } else {
+                    effectiveWord = word;
+                    postCharacter = ' ';
+                }
+
+                final WordStatistics wordStats = wordsStats.computeIfAbsent(effectiveWord, WordStatistics::new);
                 wordStats.increment(1);
+                wordStats.getPostCharacter(postCharacter).increment(1);
                 if(previousWord != null) {
                     previousWord.getChildWord(wordStats.getWord()).increment(1);
                 }

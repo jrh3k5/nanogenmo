@@ -1,8 +1,8 @@
 [
   {
-    "name": "basic case",
+    "name": "sentence ending with a period",
     "lines": [
-      "This is a simple test of a simple situation"
+      "This is a simple test of a simple situation."
     ],
     "expectedStats": [
       {
@@ -72,7 +72,186 @@
       {
         "word": "SITUATION",
         "count": 1,
-        "childWords": []
+        "childWords": [],
+        "postCharacters": [
+          {
+            "character": ".",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "sentence ending containing commas",
+    "lines": [
+      "These are, the voyages of, the starship Enterprise."
+    ],
+    "expectedStats": [
+      {
+        "word": "THESE",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "ARE",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "ARE",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "THE",
+            "count": 1
+          }
+        ],
+        "postCharacters": [
+          {
+            "character": ",",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "THE",
+        "count": 2,
+        "childWords": [
+          {
+            "word": "VOYAGES",
+            "count": 1
+          },
+          {
+            "word": "STARSHIP",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "VOYAGES",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "OF",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "OF",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "THE",
+            "count": 1
+          }
+        ],
+        "postCharacters": [
+          {
+            "character": ",",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "STARSHIP",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "ENTERPRISE",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "ENTERPRISE",
+        "count": 1,
+        "childWords": [],
+        "postCharacters": [
+          {
+            "character": ".",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "sentence ending with a question mark",
+    "lines": [
+      "What say you?"
+    ],
+    "expectedStats": [
+      {
+        "word": "WHAT",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "SAY",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "SAY",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "YOU",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "YOU",
+        "count": 1,
+        "childWords": [],
+        "postCharacters": [
+          {
+            "character": "?",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "sentence ending with an exclamation mark",
+    "lines": [
+      "How dare you!"
+    ],
+    "expectedStats": [
+      {
+        "word": "HOW",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "DARE",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "DARE",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "YOU",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "YOU",
+        "count": 1,
+        "childWords": [],
+        "postCharacters": [
+          {
+            "character": "!",
+            "count": 1
+          }
+        ]
       }
     ]
   }

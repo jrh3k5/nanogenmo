@@ -14,12 +14,18 @@ public class WordStatistics {
     @Getter
     private String word;
     @Getter
-    private int count = 0;
+    private int occurrenceCount = 0;
     private final Map<String, ChildWord> childrenWords = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<Character, PostCharacter> postCharacters = new TreeMap<>();
+    @Getter
+    private int sentenceStartCount;
 
-    public void increment(int delta) {
-        count += delta;
+    public void incrementOccurrenceCount(int delta) {
+        occurrenceCount += delta;
+    }
+
+    public void incrementSentenceStartCount(int delta) {
+        sentenceStartCount += delta;
     }
 
     public ChildWord getChildWord(String word) {

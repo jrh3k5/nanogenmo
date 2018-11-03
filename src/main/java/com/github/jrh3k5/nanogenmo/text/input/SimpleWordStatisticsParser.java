@@ -15,6 +15,9 @@ public class SimpleWordStatisticsParser implements WordStatisticsParser {
                                                                            .map(String::toUpperCase)
                                                                            .collect(Collectors.toList());
             WordStatistics previousWord = null;
+            // Tracks whether or not the previous word ended a sentence
+            // Start out as true because it's assumed the first word being read is the beginning of sentence
+            boolean previousWasEnd = true;
             for(String word : words) {
                 final String effectiveWord;
                 final char postCharacter;
@@ -27,12 +30,25 @@ public class SimpleWordStatisticsParser implements WordStatisticsParser {
                 }
 
                 final WordStatistics wordStats = wordsStats.computeIfAbsent(effectiveWord, WordStatistics::new);
-                wordStats.increment(1);
+                wordStats.incrementOccurrenceCount(1);
                 wordStats.getPostCharacter(postCharacter).increment(1);
+                if(previousWasEnd) {
+                    wordStats.incrementSentenceStartCount(1);
+                }
+
                 if(previousWord != null) {
                     previousWord.getChildWord(wordStats.getWord()).increment(1);
                 }
                 previousWord = wordStats;
+                switch(postCharacter) {
+                    case '.':
+                    case '?':
+                    case '!':
+                        previousWasEnd = true;
+                        break;
+                    default:
+                        previousWasEnd = false;
+                }
             }
         });
         return wordsStats.values().stream();

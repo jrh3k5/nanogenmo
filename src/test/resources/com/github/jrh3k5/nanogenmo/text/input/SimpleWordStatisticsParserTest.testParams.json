@@ -8,6 +8,7 @@
       {
         "word": "THIS",
         "count": 1,
+        "sentenceStartCount": 1,
         "childWords": [
           {
             "word": "IS",
@@ -91,6 +92,7 @@
       {
         "word": "THESE",
         "count": 1,
+        "sentenceStartCount": 1,
         "childWords": [
           {
             "word": "ARE",
@@ -186,6 +188,7 @@
       {
         "word": "WHAT",
         "count": 1,
+        "sentenceStartCount": 1,
         "childWords": [
           {
             "word": "SAY",
@@ -225,6 +228,7 @@
       {
         "word": "HOW",
         "count": 1,
+        "sentenceStartCount": 1,
         "childWords": [
           {
             "word": "DARE",
@@ -265,6 +269,7 @@
       {
         "word": "THIS",
         "count": 2,
+        "sentenceStartCount": 2,
         "childWords": [
           {
             "word": "IS",

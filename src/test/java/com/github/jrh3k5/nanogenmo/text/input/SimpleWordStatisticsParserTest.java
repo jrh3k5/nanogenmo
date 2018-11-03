@@ -37,8 +37,9 @@ class SimpleWordStatisticsParserTest {
                 final Collection<WordStatistics> wordStatistics = StreamSupport.stream(jsonNode.get("expectedStats").spliterator(), false)
                                                                                .map(n -> {
                                                                                    final String word = n.get("word").asText();
-                                                                                   final int count = n.get("count").asInt();
-                                                                                   final WordStatistics nStats = new WordStatistics(word, count);
+                                                                                   final int occurrenceCount = n.get("count").asInt();
+                                                                                   final int sentenceStartCount = n.has("sentenceStartCount") ? n.get("sentenceStartCount").asInt() : 0;
+                                                                                   final WordStatistics nStats = new WordStatistics(word, occurrenceCount, sentenceStartCount);
 
                                                                                    StreamSupport.stream(n.get("childWords").spliterator(), false).forEach(ncw -> {
                                                                                        final WordStatistics.ChildWord childWord = nStats.getChildWord(ncw.get("word").asText());
@@ -47,7 +48,7 @@ class SimpleWordStatisticsParserTest {
 
                                                                                    // If the post characters aren't present, then just infer that the test should look for spaces equal to the number of instances of this word
                                                                                    if(!n.has("postCharacters")) {
-                                                                                       nStats.getPostCharacter(' ').increment(count);
+                                                                                       nStats.getPostCharacter(' ').increment(occurrenceCount);
                                                                                    } else {
                                                                                        StreamSupport.stream(n.get("postCharacters").spliterator(), false).forEach(pc -> {
                                                                                            final WordStatistics.PostCharacter postCharacter = nStats.getPostCharacter(pc.get("character").asText().charAt(0));

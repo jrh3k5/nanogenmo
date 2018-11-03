@@ -254,5 +254,69 @@
         ]
       }
     ]
+  },
+  {
+    "name": "counting frequency of starting sentences",
+    "lines": [
+      "This is a line.",
+      "This is another line."
+    ],
+    "expectedStats": [
+      {
+        "word": "THIS",
+        "count": 2,
+        "childWords": [
+          {
+            "word": "IS",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "word": "IS",
+        "count": 2,
+        "childWords": [
+          {
+            "word": "A",
+            "count": 1
+          },
+          {
+            "word": "ANOTHER",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "A",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "LINE",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "LINE",
+        "count": 2,
+        "childWords": [],
+        "postCharacters": [
+          {
+            "character": ".",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "word": "ANOTHER",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "LINE",
+            "count": 1
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -260,6 +260,106 @@
     ]
   },
   {
+    "name": "counting sentence starts with a mid-sentence line break",
+    "lines": [
+      "This is a line",
+      "that wraps to another line."
+    ],
+    "expectedStats": [
+      {
+        "word": "THIS",
+        "count": 1,
+        "sentenceStartCount": 1,
+        "childWords": [
+          {
+            "word": "IS",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "IS",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "A",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "A",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "LINE",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "LINE",
+        "count": 2,
+        "childWords": [
+          {
+            "word": "THAT",
+            "count": 1
+          }
+        ],
+        "postCharacters": [
+          {
+            "character": ".",
+            "count": 1
+          },
+          {
+            "character": " ",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "THAT",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "WRAPS",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "WRAPS",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "TO",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "TO",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "ANOTHER",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "ANOTHER",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "LINE",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "counting frequency of starting sentences",
     "lines": [
       "This is a line.",

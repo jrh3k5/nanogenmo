@@ -2,10 +2,10 @@ package com.github.jrh3k5.nanogenmo.text.input;
 
 import lombok.*;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -47,8 +47,24 @@ public class WordStatistics {
     }
 
     // TODO: this is not how this should be done, ultimately
-    public String getNextChildWord() {
-        return childrenWords.get(childrenWords.keySet().iterator().next()).word;
+    public Optional<String> getNextChildWord(int probability) {
+        // Make sure that the probability is between 0 and 100
+        final int actualProbability = Math.max(0, Math.min(probability, 100));
+        final int totalChildrenOccurrences = childrenWords.values().stream().map(ChildWord::getCount).reduce(0, (a, b) -> a + b)
+        if(totalChildrenOccurrences == 0) {
+            return Optional.empty();
+        }
+
+        final Map<Integer, ChildWord> childWordDistributions = childrenWords.values().stream().collect(Collectors.toMap(c -> (c.getCount() / totalChildrenOccurrences) * 100, Function.identity()));
+        if(childWordDistributions.keySet().stream().noneMatch(i -> i >= actualProbability)) {
+            final List<String> wordsList = childWordDistributions.values().stream().map(ChildWord::getWord).collect(Collectors.toList());
+            Collections.shuffle(wordsList);
+            return Optional.of(wordsList.get(0));
+        }
+
+        final List<ChildWord> candidates = childWordDistributions.entrySet().stream().filter(kv -> kv.getKey() >= actualProbability).map(Map.Entry::getValue).collect(Collectors.toList());
+        Collections.shuffle(candidates);
+        return Optional.of(candidates.get(0).getWord());
     }
 
     // TODO: is this how we want to do this?
@@ -71,6 +87,7 @@ public class WordStatistics {
     @ToString
     public static class ChildWord {
         @NonNull
+        @Getter
         private String word;
         @Getter
         private int count = 0;

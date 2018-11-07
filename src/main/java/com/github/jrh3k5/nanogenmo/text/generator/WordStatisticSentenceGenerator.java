@@ -5,6 +5,7 @@ import com.github.jrh3k5.nanogenmo.text.input.WordStatisticsParser;
 import com.github.jrh3k5.nanogenmo.text.source.TextSource;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomUtils;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -29,10 +30,11 @@ public class WordStatisticSentenceGenerator implements SentenceGenerator {
         final WordStatistics startingWord = statistics.stream().filter(w -> w.getSentenceStartCount() > 0 && w.getChildWordCount() > 0).findAny().get();
         sentenceBuilder.append(startingWord.getWord());
 
-        WordStatistics nextWord = statisticsMap.get(startingWord.getNextChildWord());
+
+        WordStatistics nextWord = statisticsMap.get(startingWord.getNextChildWord(RandomUtils.nextInt(0, 101)));
         while(!nextWord.hasEndingPunctuation() && sentenceBuilder.length() < 200) {
             sentenceBuilder.append(" ").append(nextWord.getWord());
-            nextWord = statisticsMap.get(nextWord.getNextChildWord());
+            nextWord = statisticsMap.get(nextWord.getNextChildWord(RandomUtils.nextInt(0, 101)));
         }
 
         return sentenceBuilder.toString();

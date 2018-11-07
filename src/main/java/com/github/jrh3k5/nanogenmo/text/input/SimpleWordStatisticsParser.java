@@ -23,7 +23,7 @@ public class SimpleWordStatisticsParser implements WordStatisticsParser {
             for(String word : words) {
                 final String effectiveWord;
                 final char postCharacter;
-                if(word.matches(".+[.,?!]$")) {
+                if(word.matches(".+[.,?!;]$")) {
                     effectiveWord = word.substring(0, word.length() - 1);
                     postCharacter = word.substring(word.length() - 1).charAt(0);
                 } else {

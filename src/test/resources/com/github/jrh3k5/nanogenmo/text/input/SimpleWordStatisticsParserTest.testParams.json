@@ -423,5 +423,61 @@
         ]
       }
     ]
+  },
+  {
+    "name": "with a semicolon",
+    "lines": [
+      "Sentence with; a semicolon."
+    ],
+    "expectedStats": [
+      {
+        "word": "SENTENCE",
+        "count": 1,
+        "sentenceStartCount": 1,
+        "childWords": [
+          {
+            "word": "WITH",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "WITH",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "A",
+            "count": 1
+          }
+        ],
+        "postCharacters": [
+          {
+            "character": ";",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "A",
+        "count": 1,
+        "childWords": [
+          {
+            "word": "SEMICOLON",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "word": "SEMICOLON",
+        "count": 1,
+        "childWords": [],
+        "postCharacters": [
+          {
+            "character": ".",
+            "count": 1
+          }
+        ]
+      }
+    ]
   }
 ]

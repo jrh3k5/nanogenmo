@@ -2,7 +2,9 @@ package com.github.jrh3k5.nanogenmo.text.input;
 
 import lombok.*;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 @RequiredArgsConstructor
@@ -34,6 +36,33 @@ public class WordStatistics {
 
     public PostCharacter getPostCharacter(char character) {
         return postCharacters.computeIfAbsent(character, PostCharacter::new);
+    }
+
+    public boolean hasChildWord(String word) {
+        return childrenWords.containsKey(word);
+    }
+
+    public int getChildWordCount() {
+        return childrenWords.size();
+    }
+
+    // TODO: this is not how this should be done, ultimately
+    public String getNextChildWord() {
+        return childrenWords.get(childrenWords.keySet().iterator().next()).word;
+    }
+
+    // TODO: is this how we want to do this?
+    public boolean hasEndingPunctuation() {
+        return postCharacters.keySet().stream().anyMatch(c -> {
+            switch(c) {
+                case '.':
+                case '?':
+                case '!':
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
 
     @RequiredArgsConstructor

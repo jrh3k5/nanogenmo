@@ -1,10 +1,12 @@
 package com.github.jrh3k5.nanogenmo.text.input;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import lombok.*;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -12,6 +14,10 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @ToString
 public class WordStatistics {
+    private static int calculateFrequency(int occurrence, int total) {
+        return (int) Math.ceil((occurrence / (double) total) * 100);
+    }
+
     @NonNull
     @Getter
     private String word;
@@ -22,24 +28,24 @@ public class WordStatistics {
     @Getter
     private int sentenceStartCount;
 
-    public void incrementOccurrenceCount(int delta) {
+    void incrementOccurrenceCount(int delta) {
         occurrenceCount += delta;
     }
 
-    public void incrementSentenceStartCount(int delta) {
+    void incrementSentenceStartCount(int delta) {
         sentenceStartCount += delta;
     }
 
-    public ChildWord getChildWord(String word) {
+    ChildWord getChildWord(String word) {
         return childrenWords.computeIfAbsent(word, ChildWord::new);
     }
 
-    public PostCharacter getPostCharacter(char character) {
+    PostCharacter getPostCharacter(char character) {
         return postCharacters.computeIfAbsent(character, PostCharacter::new);
     }
 
-    public boolean hasChildWord(String word) {
-        return childrenWords.containsKey(word);
+    public char getPostCharacter(int probability) {
+        return getElement(postCharacters, PostCharacter::getCharacter, probability).orElseThrow();
     }
 
     public int getChildWordCount() {
@@ -48,23 +54,34 @@ public class WordStatistics {
 
     // TODO: this is not how this should be done, ultimately
     public Optional<String> getNextChildWord(int probability) {
+        return getElement(childrenWords, ChildWord::getWord, probability);
+    }
+
+    private static <K, V extends Countable, O> Optional<O> getElement(Map<K, V> map, Function<V, O> outputExtractor, int probability) {
         // Make sure that the probability is between 0 and 100
         final int actualProbability = Math.max(0, Math.min(probability, 100));
-        final int totalChildrenOccurrences = childrenWords.values().stream().map(ChildWord::getCount).reduce(0, (a, b) -> a + b)
+        final int totalChildrenOccurrences = map.values().stream().map(Countable::getCount).reduce(0, (a, b) -> a + b);
         if(totalChildrenOccurrences == 0) {
             return Optional.empty();
         }
 
-        final Map<Integer, ChildWord> childWordDistributions = childrenWords.values().stream().collect(Collectors.toMap(c -> (c.getCount() / totalChildrenOccurrences) * 100, Function.identity()));
+        final Supplier<Multimap<Integer, V>> supplier = ArrayListMultimap::create;
+        final BiConsumer<Multimap<Integer, V>, V> accumulator = (destination, value) -> destination.put(calculateFrequency(value.getCount(), totalChildrenOccurrences), value);
+        final BinaryOperator<Multimap<Integer, V>> combiner = (map1, map2) -> {
+            map1.putAll(map2);
+            return map1;
+        };
+        final Multimap<Integer, V> childWordDistributions = map.values().stream().collect(Collector.of(supplier, accumulator, combiner));
         if(childWordDistributions.keySet().stream().noneMatch(i -> i >= actualProbability)) {
-            final List<String> wordsList = childWordDistributions.values().stream().map(ChildWord::getWord).collect(Collectors.toList());
+            final List<O> wordsList = childWordDistributions.values().stream().map(outputExtractor).collect(Collectors.toList());
             Collections.shuffle(wordsList);
             return Optional.of(wordsList.get(0));
         }
 
-        final List<ChildWord> candidates = childWordDistributions.entrySet().stream().filter(kv -> kv.getKey() >= actualProbability).map(Map.Entry::getValue).collect(Collectors.toList());
+        final List<V> candidates = childWordDistributions.entries().stream().filter(kv -> kv.getKey() >= actualProbability).map(Map.Entry::getValue).collect(Collectors.toList());
+        // TODO: make this a generated random index?
         Collections.shuffle(candidates);
-        return Optional.of(candidates.get(0).getWord());
+        return Optional.of(outputExtractor.apply(candidates.get(0)));
     }
 
     // TODO: is this how we want to do this?
@@ -85,14 +102,14 @@ public class WordStatistics {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
-    public static class ChildWord {
+    static class ChildWord implements Countable {
         @NonNull
         @Getter
         private String word;
         @Getter
         private int count = 0;
 
-        public void increment(int delta) {
+        void increment(int delta) {
             count += delta;
         }
     }
@@ -100,17 +117,22 @@ public class WordStatistics {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
-    public static class PostCharacter {
+    static class PostCharacter implements Countable {
+        @Getter
         private char character;
         @Getter
         private int count = 0;
 
-        public PostCharacter(char character) {
+        PostCharacter(char character) {
             this.character = character;
         }
 
-        public void increment(int delta) {
+        void increment(int delta) {
             count += delta;
         }
+    }
+
+    public interface Countable {
+        int getCount();
     }
 }

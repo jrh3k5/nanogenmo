@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,11 +32,20 @@ public class WordStatisticSentenceGenerator implements SentenceGenerator {
         final WordStatistics startingWord = statistics.stream().filter(w -> w.getSentenceStartCount() > 0 && w.getChildWordCount() > 0).findAny().get();
         sentenceBuilder.append(startingWord.getWord());
 
-
-        WordStatistics nextWord = statisticsMap.get(startingWord.getNextChildWord(RandomUtils.nextInt(0, 101)));
-        while(!nextWord.hasEndingPunctuation() && sentenceBuilder.length() < 200) {
-            sentenceBuilder.append(" ").append(nextWord.getWord());
-            nextWord = statisticsMap.get(nextWord.getNextChildWord(RandomUtils.nextInt(0, 101)));
+        final Supplier<Integer> probabilityGenerator = () -> RandomUtils.nextInt(0, 101);
+        Optional<String> nextChildWord = startingWord.getNextChildWord(probabilityGenerator.get());
+        if(nextChildWord.isEmpty()) {
+            // TODO: make this choose an actual ending character
+            sentenceBuilder.append(".");
+        }
+        WordStatistics nextWord = statisticsMap.get(nextChildWord.get());
+        while(sentenceBuilder.length() < 200) {
+            sentenceBuilder.append(nextWord.getWord()).append(nextWord.getPostCharacter(probabilityGenerator.get()));
+            nextChildWord = nextWord.getNextChildWord(probabilityGenerator.get());
+            if(nextChildWord.isEmpty()) {
+                break;
+            }
+            nextWord = statisticsMap.get(nextChildWord.get());
         }
 
         return sentenceBuilder.toString();

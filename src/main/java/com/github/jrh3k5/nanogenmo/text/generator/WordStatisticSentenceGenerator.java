@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class WordStatisticSentenceGenerator implements SentenceGenerator {
@@ -29,8 +28,8 @@ public class WordStatisticSentenceGenerator implements SentenceGenerator {
         final List<WordStatistics> statistics = wordStatisticsParser.parse(textSource.getLines()).collect(Collectors.toList());
         final Map<String, WordStatistics> statisticsMap = statistics.stream().collect(Collectors.toMap(WordStatistics::getWord, Function.identity()));
         final StringBuilder sentenceBuilder = new StringBuilder();
-        final WordStatistics startingWord = statistics.stream().filter(w -> w.getSentenceStartCount() > 0 && w.getChildWordCount() > 0).findAny().get();
-        sentenceBuilder.append(startingWord.getWord());
+        final WordStatistics startingWord = statistics.stream().filter(w -> w.getSentenceStartCount() > 0 && w.getChildWordCount() > 0).findAny().orElseThrow();
+        sentenceBuilder.append(startingWord.getWord()).append(' ');
 
         final Supplier<Integer> probabilityGenerator = () -> RandomUtils.nextInt(0, 101);
         Optional<String> nextChildWord = startingWord.getNextChildWord(probabilityGenerator.get());
@@ -38,14 +37,19 @@ public class WordStatisticSentenceGenerator implements SentenceGenerator {
             // TODO: make this choose an actual ending character
             sentenceBuilder.append(".");
         }
-        WordStatistics nextWord = statisticsMap.get(nextChildWord.get());
+        WordStatistics nextWord = statisticsMap.get(nextChildWord.orElseThrow());
         while(sentenceBuilder.length() < 200) {
-            sentenceBuilder.append(nextWord.getWord()).append(nextWord.getPostCharacter(probabilityGenerator.get()));
+            sentenceBuilder.append(nextWord.getWord());
+            final WordStatistics.PostCharacter postCharacter = nextWord.getPostCharacter(probabilityGenerator.get());
+            sentenceBuilder.append(postCharacter.getCharacter());
+            if(postCharacter.isEndingPunctuation()) {
+                sentenceBuilder.append(' ');
+            }
             nextChildWord = nextWord.getNextChildWord(probabilityGenerator.get());
             if(nextChildWord.isEmpty()) {
                 break;
             }
-            nextWord = statisticsMap.get(nextChildWord.get());
+            nextWord = statisticsMap.get(nextChildWord.orElseThrow());
         }
 
         return sentenceBuilder.toString();

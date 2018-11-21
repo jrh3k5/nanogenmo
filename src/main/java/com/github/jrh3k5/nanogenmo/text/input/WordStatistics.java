@@ -28,12 +28,12 @@ public class WordStatistics {
     @Getter
     private int sentenceStartCount;
 
-    void incrementOccurrenceCount(int delta) {
-        occurrenceCount += delta;
+    void incrementOccurrenceCount() {
+        occurrenceCount++;
     }
 
-    void incrementSentenceStartCount(int delta) {
-        sentenceStartCount += delta;
+    void incrementSentenceStartCount() {
+        sentenceStartCount++;
     }
 
     ChildWord getChildWord(String word) {
@@ -44,8 +44,8 @@ public class WordStatistics {
         return postCharacters.computeIfAbsent(character, PostCharacter::new);
     }
 
-    public char getPostCharacter(int probability) {
-        return getElement(postCharacters, PostCharacter::getCharacter, probability).orElseThrow();
+    public PostCharacter getPostCharacter(int probability) {
+        return getElement(postCharacters, Function.identity(), probability).orElseThrow();
     }
 
     public int getChildWordCount() {
@@ -117,7 +117,7 @@ public class WordStatistics {
     @AllArgsConstructor
     @EqualsAndHashCode
     @ToString
-    static class PostCharacter implements Countable {
+    public static class PostCharacter implements Countable {
         @Getter
         private char character;
         @Getter
@@ -129,6 +129,19 @@ public class WordStatistics {
 
         void increment(int delta) {
             count += delta;
+        }
+
+        public boolean isEndingPunctuation() {
+            switch(character) {
+                case '.':
+                case '?':
+                case '!':
+                case ';':
+                case ',':
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 

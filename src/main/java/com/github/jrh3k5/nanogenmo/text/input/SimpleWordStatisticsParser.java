@@ -32,10 +32,10 @@ public class SimpleWordStatisticsParser implements WordStatisticsParser {
                 }
 
                 final WordStatistics wordStats = wordsStats.computeIfAbsent(effectiveWord, WordStatistics::new);
-                wordStats.incrementOccurrenceCount(1);
+                wordStats.incrementOccurrenceCount();
                 wordStats.getPostCharacter(postCharacter).increment(1);
                 if(previousWasEnd.booleanValue()) {
-                    wordStats.incrementSentenceStartCount(1);
+                    wordStats.incrementSentenceStartCount();
                 }
 
                 if(previousWord.getValue() != null) {

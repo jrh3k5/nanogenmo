@@ -10,6 +10,11 @@
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     </properties>
+    <scm>
+        <connection>scm:git:git@github.com:jrh3k5/nanogenmo.git</connection>
+        <developerConnection>scm:git:git@github.com:jrh3k5/nanogenmo.git</developerConnection>
+        <url>https://github.com/jrh3k5/nanogenmo</url>
+    </scm>
     <build>
         <pluginManagement>
             <plugins>

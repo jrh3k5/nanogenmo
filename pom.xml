@@ -4,7 +4,7 @@
 
     <groupId>com.github.jrh3k5</groupId>
     <artifactId>nanogenmo</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     </properties>
@@ -12,7 +12,7 @@
         <connection>scm:git:git@github.com:jrh3k5/nanogenmo.git</connection>
         <developerConnection>scm:git:git@github.com:jrh3k5/nanogenmo.git</developerConnection>
         <url>https://github.com/jrh3k5/nanogenmo</url>
-      <tag>nanogenmo-1.0</tag>
+      <tag>HEAD</tag>
   </scm>
     <build>
         <pluginManagement>

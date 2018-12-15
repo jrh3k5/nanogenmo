@@ -1,6 +1,5 @@
 package com.github.jrh3k5.nanogenmo;
 
-import com.github.jrh3k5.nanogenmo.characters.CharacterProvider;
 import com.github.jrh3k5.nanogenmo.ioc.NaNoGenMoModule;
 import com.github.jrh3k5.nanogenmo.text.generator.SentenceGenerator;
 import com.github.jrh3k5.nanogenmo.text.source.DirectoryTextSource;
@@ -17,8 +16,6 @@ public class App {
     public static void main(String...args) throws IOException {
         final TextSource textSource = new DirectoryTextSource(Path.of("src/main/resources"));
         final Injector injector = Guice.createInjector(new NaNoGenMoModule(), new TextSourceModule(textSource));
-//        final CharacterProvider characterProvider = injector.getInstance(CharacterProvider.class);
-//        characterProvider.getCharacters().forEach(System.out::println);
         System.out.println(injector.getInstance(SentenceGenerator.class).generateSentence());
     }
 
